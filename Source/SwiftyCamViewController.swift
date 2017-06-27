@@ -783,7 +783,14 @@ open class SwiftyCamViewController: UIViewController {
     }
 
 	fileprivate func getVideoOrientation() -> AVCaptureVideoOrientation {
-		guard shouldUseDeviceOrientation, let deviceOrientation = self.deviceOrientation else { return previewLayer!.videoPreviewLayer.connection.videoOrientation }
+		guard shouldUseDeviceOrientation, let deviceOrientation = self.deviceOrientation else {
+            var orientation: AVCaptureVideoOrientation!
+            DispatchQueue.main.sync {
+               orientation = self.previewLayer!.videoPreviewLayer.connection.videoOrientation
+            }
+            return orientation
+            
+        }
 
 		switch deviceOrientation {
 		case .landscapeLeft:
